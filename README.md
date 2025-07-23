@@ -1,12 +1,13 @@
 # Meetz Event Scraper
 
-This repository contains a simple Instagram scraper using [Instaloader](https://instaloader.github.io/) that collects recent car meet posts and stores them in Firebase Firestore.
+This repository contains a simple Instagram scraper using [Instaloader](https://instaloader.github.io/) that collects recent car meet posts from specified user accounts and stores them in Firebase Firestore. Captions are scanned for addresses which are geocoded so the Meetz app can drop pins on a map.
 
 ## Requirements
 
 - Python 3.10+
 - `instaloader`
 - `firebase-admin`
+- `geopy`
 
 Install dependencies:
 
@@ -25,12 +26,12 @@ export INSTA_USERNAME=<your-instagram-username>
 export INSTA_PASSWORD=<your-instagram-password>
 ```
 
-3. Run the scraper:
+3. Edit `scraper.py` and update the `USERNAMES` list with the Instagram accounts you want to monitor.
+
+4. Run the scraper:
 
 ```bash
 python scraper.py
 ```
 
-The script pulls posts from predefined car meet related hashtags from the last seven days and saves them to the `instagram_posts` collection in Firestore. Run the script periodically (e.g., via cron) to keep the data updated.
-
-
+The script fetches posts from the last seven days for each account, attempts to geocode addresses mentioned in captions, and saves results in the `instagram_posts` collection. Run the script daily (for example using cron) to keep the data up to date.
