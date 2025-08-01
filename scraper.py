@@ -9,8 +9,10 @@ from geopy.geocoders import Nominatim
 
 # Add the Instagram usernames you want to monitor here
 USERNAMES = [
-    "exampleaccount1",
-    "exampleaccount2",
+    "houston_carmeets",
+    "coffeeandcars",
+    "eatsleepcarmeet",
+    "houstonandcars",
 ]
 
 CAR_MEET_KEYWORD = "car meet"

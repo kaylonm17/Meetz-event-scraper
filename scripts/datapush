@@ -1,0 +1,20 @@
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Initialize Firebase
+cred = credentials.Certificate("path/to/serviceAccountKey.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Example data
+car_meet = {
+    "title": "Houston Friday Night Meet",
+    "date": "2025-08-01",
+    "time": "9:00 PM",
+    "address": "123 Main St, Houston, TX",
+    "coords": {"lat": 29.7604, "lng": -95.3698},
+}
+
+# Push to Firestore
+db.collection("car_meets").add(car_meet)
+print("Data uploaded!")
