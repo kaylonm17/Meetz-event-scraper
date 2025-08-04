@@ -1,7 +1,7 @@
 import os
 import re
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Iterable, Optional, Dict, Any
 
 import instaloader
@@ -63,14 +63,17 @@ class InstagramCarMeetScraper:
 
     def fetch_recent_posts(self, since_days: int = 3) -> Iterable[Dict[str, Any]]:
         """Yield recent car-meet related posts within ``since_days`` days."""
-        since = datetime.utcnow() - timedelta(days=since_days)
+        since = datetime.now(timezone.utc) - timedelta(days=since_days)
 
         for username in USERNAMES:
             profile = instaloader.Profile.from_username(self.loader.context, username)
             while True:
                 try:
                     for post in profile.get_posts():
-                        if post.date_utc < since:
+                        post_date = post.date_utc
+                        if post_date.tzinfo is None:
+                            post_date = post_date.replace(tzinfo=timezone.utc)
+                        if post_date < since:
                             break
                         caption = post.caption or ""
                         if CAR_MEET_KEYWORD not in caption.lower():
@@ -82,7 +85,7 @@ class InstagramCarMeetScraper:
                             "shortcode": post.shortcode,
                             "url": f"https://www.instagram.com/p/{post.shortcode}/",
                             "caption": caption,
-                            "taken_at": post.date_utc,
+                            "taken_at": post_date,
                             "likes": post.likes,
                             "username": username,
                             "address": address,
