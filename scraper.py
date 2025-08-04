@@ -50,9 +50,12 @@ class InstagramCarMeetScraper:
     """Fetch recent posts related to car meets from user accounts and save them to Firebase."""
 
     def __init__(self, firebase_key_path: str, username: str | None = None, password: str | None = None):
+        if not username or not password:
+            raise ValueError(
+                "Instagram username and password are required for authenticated scraping."
+            )
         self.loader = instaloader.Instaloader()
-        if username and password:
-            self.loader.login(username, password)
+        self.loader.login(username, password)
 
         cred = credentials.Certificate(firebase_key_path)
         initialize_app(cred)
